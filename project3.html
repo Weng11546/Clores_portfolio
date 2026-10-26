@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ExpenseFlow (Expense tracker)| Rowena Clores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="project.css">
+<script>
+  document.documentElement.classList.add("js"); /* lets the page stay visible if a script file is missing */
+  /* apply saved theme before the page paints, so there is no flash */
+  try { var t = localStorage.getItem("theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+</script>
+</head>
+<body class="page">
+
+<!-- FLOATING NAV (same as the main page) -->
+<header class="nav-wrap">
+  <div class="nav">
+    <a class="logo" href="index.html#home">PORTFOLIO.</a>
+    <nav id="menu" aria-label="Main">
+      <a href="index.html#home">Home</a><a href="index.html#profile">Profile</a><a href="index.html#skills">Skills</a><a href="index.html#projects" class="active">Projects</a><a href="index.html#problem-solving">Problem-Solving</a><a href="index.html#employability">Employability</a><a href="index.html#resume">Resume</a><a href="index.html#certificates">Certificates</a><a href="index.html#github">GitHub</a><a href="index.html#contact">Contact</a><a href="index.html#reflection">Reflection</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Switch light or dark mode"><i class="fa-solid fa-moon"></i></button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- PROJECT HEADER -->
+<section class="proj-hero">
+  <a class="back-link reveal" href="index.html#projects"><i class="fa-solid fa-arrow-left"></i> Back to all projects</a>
+  <p class="label reveal">Project 03 &middot; Category</p>
+  <h1 class="reveal">ExpenseFlow (Expense tracker)</h1>
+  <p class="lead reveal">It's an expense tracking application for mobile devices, designed for individuals who want to monitor their spending and manage their finances effectively.</p>
+  <div class="buttons reveal">
+    <a class="btn dark" href="https://github.com/edselvillanueva980/Project-ExpenseTracker-" target="_blank" rel="noopener">Live demo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+    <a class="btn light" href="https://github.com/edselvillanueva980/Project-ExpenseTracker-" target="_blank" rel="noopener">View on GitHub <i class="fa-brands fa-github"></i></a>
+  </div>
+  <dl class="details proj-meta reveal"><div><dt>Type</dt><dd>Application</dd></div><div><dt>Role</dt><dd>Document Administrator</dd></div><div><dt>Timeline</dt><dd>2025–2026</dd></div><div><dt>Status</dt><dd>Completed</dd></div></dl>
+</section>
+
+<!-- OVERVIEW + PROBLEM -->
+<section class="block">
+  <div class="two-up">
+    <div class="reveal">
+      <h2>Project overview</h2>
+      <p>ExpenseFlow is a mobile application designed to help users track their expenses and manage their finances effectively.</p>
+    </div>
+    <div class="reveal">
+      <h2>Problem statement</h2>
+      <p>Many individuals struggle to keep track of their expenses, leading to financial mismanagement and difficulty in budgeting. ExpenseFlow aims to provide a simple and intuitive solution for users to monitor their spending habits.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIVES + USERS -->
+<section class="block">
+  <div class="two-up">
+    <div class="reveal">
+      <h2>Objectives</h2>
+      <ul class="block-list">
+        <li>Develop a mobile application that helps users monitor and manage their daily expenses efficiently.</li>
+        <li>Provide a user-friendly interface for easy expense tracking and financial management.</li>
+        <li>Offer insightful reports and analytics to help users make informed financial decisions.</li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <h2>Target users</h2>
+      <ul class="block-list">
+        <li>Students</li>
+        <li>Employees</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGIES -->
+<section class="block">
+  <div class="reveal">
+    <h2>Technologies used</h2>
+    <ul class="tags"><li>Android Studio</li><li>Kotlin</li><li>Room Database</li><li>XML</li><li>Compose</li><li>Claude</li></ul>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="block">
+  <h2 class="reveal">Key features</h2>
+  <div class="cards four"><article class="info-card reveal"><span class="chip-icon"><i class="fa-solid fa-bullseye"></i></span><h3>Record Expenses</h3><p>Users can easily record their daily expenses with a simple interface.</p></article><article class="info-card reveal"><span class="chip-icon"><i class="fa-solid fa-gears"></i></span><h3>AI Assistant</h3><p>The AI assistant helps users categorize expenses and provides financial insights.</p></article><article class="info-card reveal"><span class="chip-icon"><i class="fa-solid fa-shield-halved"></i></span><h3>Budget Suggestions</h3><p>The app provides personalized budget suggestions based on user spending patterns.</p></article><article class="info-card reveal"><span class="chip-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span><h3>Android platform</h3><p>The app is built for the Android platform and can be run on android devices.</p></article></div>
+</section>
+
+<!-- ARCHITECTURE / DESIGN -->
+<section class="block">
+  <div class="two-up">
+    <div class="reveal">
+      <h2>System architecture</h2>
+      <div class="diagram"><i class="fa-solid fa-sitemap"></i><strong>The Expense Tracker mobile application follows a three-layer architecture consisting of the Mobile Frontend, Backend Server, and Database</strong></div>
+    </div>
+    <div class="reveal">
+      <h2>System design</h2>
+      <div class="diagram"><i class="fa-solid fa-sitemap"></i><strong>The design of the Expense Tracker mobile application focuses on simplicity and ease of use. The user interface is intuitive, allowing users to quickly navigate through the app and record their expenses with minimal effort. The app also provides visual representations of spending patterns through charts and graphs, making it easier for users to understand their financial habits.</strong></div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="block">
+  <h2 class="reveal">Screenshots</h2>
+  <div class="shots">
+  <figure class="reveal"><div class="thumb"><a class="shot-open" href="main-screen.jpg"><img src="main-screen.jpg" alt="Home screen with today's total"></a></div><figcaption>Home</figcaption></figure>
+  <figure class="reveal"><div class="thumb"><a class="shot-open" href="budget.jpg"><img src="budget.jpg" alt="Budget screen with weekly cap and category limits"></a></div><figcaption>Budget</figcaption></figure>
+  <figure class="reveal"><div class="thumb"><a class="shot-open" href="reports.jpg"><img src="reports.jpg" alt="Reports screen with today, weekly, and monthly views"></a></div><figcaption>Reports</figcaption></figure>
+  <figure class="reveal"><div class="thumb"><a class="shot-open" href="financial-ai.jpg"><img src="financial-ai.jpg" alt="AI Financial Advisor chat"></a></div><figcaption>AI Financial Advisor</figcaption></figure>
+</div>
+</section>
+
+<!-- INSTALLATION + USAGE -->
+<section class="block">
+  <div class="two-up">
+    <div class="reveal">
+      <h2>Installation</h2>
+      <pre class="code-box">
+1. Download the APK file from the GitHub repository.
+2. Install the APK on your Android device.
+3. Open the app.
+</pre>
+    </div>
+    <div class="reveal">
+      <h2>How to use</h2>
+      <p>Explain, step by step, how a user operates the project, from first screen to final result.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTING -->
+<section class="block">
+  <h2 class="reveal">Testing</h2>
+  <div class="table-wrap reveal">
+    <table class="test-table">
+      <thead><tr><th>Test case</th><th>Expected result</th><th>Result</th></tr></thead>
+      <tbody><tr><td>Login with valid account</td><td>Redirects to dashboard</td><td>Pass</td></tr><tr><td>Add record with empty field</td><td>Shows validation message</td><td>Pass</td></tr><tr><td>Search for unknown name</td><td>Shows 'no results'</td><td>Pass</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- LIMITATIONS + FUTURE -->
+<section class="block">
+  <div class="two-up">
+    <div class="reveal">
+      <h2>Limitations</h2>
+      <ul class="block-list"><li>Optimized for Android devices; performance may vary across different models or OS versions.
+</li><li>Some features, such as cloud backup or report syncing, require an active internet connection.</li></ul>
+    </div>
+    <div class="reveal">
+      <h2>Future improvements</h2>
+      <ul class="block-list"><li>Implement cross-platform support to allow users on both Android and iOS to access the app seamlessly.</li><li>Improve offline capabilities, so users can log expenses without the internet and sync automatically when online</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- PREV / NEXT -->
+<section>
+  <nav class="proj-nav reveal" aria-label="Other projects">
+    <a class="btn light" href="project2.html"><i class="fa-solid fa-arrow-left"></i> Project 2</a>
+    <a class="btn outline" href="index.html#projects">All projects</a>
+    <a class="btn dark" href="project1.html">Project 1 <i class="fa-solid fa-arrow-right"></i></a>
+  </nav>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Rowena Clores. All rights reserved.</p>
+</footer>
+
+<script src="project.js" onerror="document.documentElement.classList.remove('js')"></script>
+</body>
+</html>

@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rowena Clores | IT Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Clickable certificates + preview popup (loads after style.css) */
+
+.cert-list li { padding: 0; }
+.cert-link {
+  display: flex; align-items: center; gap: 18px; width: 100%;
+  padding: 18px 22px; border-radius: 16px; cursor: pointer;
+}
+.cert-link > div { flex: 1; min-width: 0; }
+.cert-open { margin-left: auto; font-size: 0.85rem; color: var(--muted); transition: color 0.25s, transform 0.3s var(--ease); }
+.cert-list li:hover .cert-open, .cert-link:focus-visible .cert-open { color: var(--ink); transform: scale(1.15); }
+
+/* popup */
+body.modal-open { overflow: hidden; }
+.cert-modal {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center; padding: 56px 16px 24px;
+  background: rgba(8, 11, 20, 0.88);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.cert-modal.open { opacity: 1; visibility: visible; }
+.cert-modal img {
+  max-width: min(96vw, 1100px); max-height: calc(100vh - 100px);
+  width: auto; height: auto; object-fit: contain;
+  border-radius: 12px; background: #fff; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  transform: scale(0.96); transition: transform 0.35s var(--ease);
+}
+.cert-modal.open img { transform: none; }
+.cert-close {
+  position: absolute; top: 12px; right: 16px;
+  width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(255, 255, 255, 0.14); color: #fff; font-size: 1.1rem;
+  transition: background 0.25s;
+}
+.cert-close:hover { background: rgba(255, 255, 255, 0.28); }
+.cert-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.cert-modal [hidden] { display: none !important; }
+.cert-modal iframe {
+  width: min(96vw, 1000px); height: calc(100vh - 110px);
+  border: 0; border-radius: 12px; background: #fff; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+.cert-newtab { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.75); }
+.cert-newtab:hover { color: #fff; }
+
+/* ============ CLAYMORPHISM TOKENS (light + dark, same as the portfolio theme switch) ============ */
+:root {
+  --clay-body: #dccff3;
+  --clay-body-2: #c7b5ea;
+  --clay-front-1: #eee6fb;
+  --clay-front-2: #d9cbf1;
+  --clay-card: #fffdfb;
+  --clay-chip: #ece3fa;
+  --clay-hi: rgba(255, 255, 255, 0.88);
+  --clay-lo: rgba(96, 62, 164, 0.18);
+  --clay-drop: rgba(96, 62, 164, 0.32);
+}
+[data-theme="dark"] {
+  --clay-body: #3d3170;
+  --clay-body-2: #2f2658;
+  --clay-front-1: #4a3d86;
+  --clay-front-2: #3a2f6e;
+  --clay-card: #1a1832;
+  --clay-chip: #2f2660;
+  --clay-hi: rgba(255, 255, 255, 0.13);
+  --clay-lo: rgba(10, 4, 30, 0.42);
+  --clay-drop: rgba(8, 3, 26, 0.6);
+}
+
+/* ============ FOLDER ============ */
+.folder-wrap { --overlap: 96px; padding-top: 30px; }
+.folder { position: relative; margin-top: 44px; }
+
+.folder-back {
+  position: relative;
+  padding: 64px 40px 34px;
+  border-radius: 44px;
+  background: linear-gradient(180deg, var(--clay-body), var(--clay-body-2));
+  box-shadow:
+    0 40px 50px -26px var(--clay-drop),
+    inset 0 12px 16px var(--clay-hi),
+    inset 0 -18px 26px var(--clay-lo);
+}
+.folder-tab {
+  position: absolute; top: -40px; left: 46px;
+  padding: 12px 30px 14px; border-radius: 26px 26px 0 0;
+  background: var(--clay-body);
+  box-shadow: inset 0 10px 12px var(--clay-hi), 0 -6px 14px -8px var(--clay-lo);
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text);
+}
+.folder-tab::after { /* fills the seam so tab and body read as one piece of clay */
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 10px; background: var(--clay-body);
+}
+
+.cards-row { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: start; }
+
+.doc-card {
+  position: relative; display: flex; flex-direction: column; text-align: left;
+  min-height: 262px; padding: 20px 20px 24px; border: 0; border-radius: 28px;
+  background: var(--clay-card); color: var(--ink); font-family: var(--font); cursor: pointer;
+  box-shadow:
+    0 18px 26px -14px var(--clay-drop),
+    inset 0 8px 10px var(--clay-hi),
+    inset 0 -10px 14px var(--clay-lo);
+  transition: transform 0.45s var(--ease), box-shadow 0.35s;
+}
+.doc-card:nth-child(1) { margin-top: 20px; }
+.doc-card:nth-child(2) { margin-top: 0; }
+.doc-card:nth-child(3) { margin-top: 12px; }
+.doc-card:nth-child(4) { margin-top: 2px; }
+.doc-card:nth-child(5) { margin-top: 16px; }
+.doc-card:nth-child(6) { margin-top: 10px; }
+.doc-card:hover, .doc-card:focus-visible { transform: translateY(-16px) rotate(-0.6deg); box-shadow: 0 34px 36px -16px var(--clay-drop), inset 0 8px 10px var(--clay-hi), inset 0 -10px 14px var(--clay-lo); }
+.doc-card:active { transform: translateY(-8px) scale(0.985); }
+.doc-card:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+
+.doc-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.clay-chip {
+  width: 46px; height: 46px; display: grid; place-items: center; border-radius: 16px;
+  background: var(--clay-chip); color: var(--ink); font-size: 1.05rem;
+  box-shadow: 0 8px 12px -6px var(--clay-drop), inset 0 4px 6px var(--clay-hi), inset 0 -5px 8px var(--clay-lo);
+}
+.doc-num { font-size: 0.78rem; font-weight: 500; color: var(--muted); }
+.doc-card h3 { margin-top: 22px; font-size: 1.28rem; line-height: 1.15; }
+.doc-file { margin-top: 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.7rem; color: var(--muted); word-break: break-all; }
+.doc-lines { margin-top: 18px; display: grid; gap: 7px; }
+.doc-lines i { display: block; height: 6px; border-radius: 99px; background: var(--line); }
+.doc-lines i:nth-child(2) { width: 62%; }
+.doc-open { margin-top: auto; padding-top: 14px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; transition: color 0.25s, gap 0.3s var(--ease); }
+.doc-card:hover .doc-open, .doc-card:focus-visible .doc-open { color: var(--ink); gap: 12px; }
+
+/* the front pocket, drawn over the lower part of the files */
+.folder-front {
+  position: relative; z-index: 2; pointer-events: none;
+  margin: calc(var(--overlap) * -1) -18px 0;
+  padding: 44px 44px 40px;
+  border-radius: 40px;
+  background: linear-gradient(180deg, var(--clay-front-1), var(--clay-front-2));
+  box-shadow:
+    0 -10px 20px -14px var(--clay-lo),
+    0 36px 46px -22px var(--clay-drop),
+    inset 0 12px 16px var(--clay-hi),
+    inset 0 -20px 28px var(--clay-lo);
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px;
+}
+.folder-front h2 { display: flex; align-items: center; gap: 14px; margin: 0; font-size: clamp(1.9rem, 4.4vw, 2.9rem); }
+.folder-front h2 i { font-size: 0.55em; color: var(--text); }
+.folder-front p { margin-top: 6px; max-width: 46ch; font-size: 0.95rem; }
+.folder-front .by { margin-top: 14px; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.count-pill {
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 999px;
+  background: var(--clay-chip); color: var(--ink); font-size: 0.85rem; font-weight: 600;
+  box-shadow: 0 10px 14px -8px var(--clay-drop), inset 0 5px 7px var(--clay-hi), inset 0 -6px 9px var(--clay-lo);
+}
+.folder-hint { margin-top: 26px; text-align: center; font-size: 0.8rem; color: var(--muted); }
+.folder-hint i { margin-right: 8px; }
+
+/* ============ FILE VIEWER (popup) ============ */
+body.modal-open { overflow: hidden; }
+.doc-modal {
+  position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px;
+  background: rgba(24, 14, 52, 0.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+}
+.doc-modal.open { opacity: 1; visibility: visible; }
+.doc-window {
+  width: min(1020px, 100%); height: min(780px, calc(100vh - 40px));
+  display: grid; grid-template-columns: 250px 1fr; overflow: hidden;
+  border-radius: 36px; background: var(--clay-body);
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 12px 16px var(--clay-hi), inset 0 -16px 24px var(--clay-lo);
+  transform: translateY(18px) scale(0.97); transition: transform 0.45s var(--ease);
+}
+.doc-modal.open .doc-window { transform: none; }
+
+.doc-side { padding: 26px 18px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.doc-side-title { padding: 0 10px 8px; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.doc-tab {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 0; border-radius: 20px;
+  background: transparent; color: var(--ink); font-family: var(--font); text-align: left; cursor: pointer;
+  transition: background 0.25s, box-shadow 0.25s, transform 0.3s var(--ease);
+}
+.doc-tab:hover { background: color-mix(in srgb, var(--clay-card) 55%, transparent); }
+.doc-tab.active {
+  background: var(--clay-card);
+  box-shadow: 0 10px 14px -8px var(--clay-drop), inset 0 6px 8px var(--clay-hi), inset 0 -8px 10px var(--clay-lo);
+}
+.doc-tab .clay-chip { width: 36px; height: 36px; border-radius: 12px; font-size: 0.85rem; flex-shrink: 0; }
+.doc-tab strong { display: block; font-size: 0.85rem; line-height: 1.25; }
+.doc-tab small { display: block; margin-top: 2px; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+.doc-main { display: flex; flex-direction: column; min-width: 0; margin: 14px 14px 14px 0; border-radius: 26px; background: var(--clay-card); box-shadow: inset 0 8px 12px var(--clay-lo), inset 0 -4px 8px var(--clay-hi); overflow: hidden; }
+.doc-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 22px; border-bottom: 1px solid var(--line); }
+.doc-bar code { padding: 6px 14px; border-radius: 99px; background: var(--clay-chip); color: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.78rem; }
+.doc-close {
+  width: 42px; height: 42px; flex-shrink: 0; display: grid; place-items: center; border: 0; border-radius: 50%; cursor: pointer;
+  background: var(--clay-chip); color: var(--ink); font-size: 1rem;
+  box-shadow: 0 8px 12px -6px var(--clay-drop), inset 0 4px 6px var(--clay-hi), inset 0 -5px 8px var(--clay-lo);
+  transition: transform 0.3s var(--ease);
+}
+.doc-close:hover { transform: scale(1.08) rotate(90deg); }
+.doc-body { flex: 1; overflow-y: auto; padding: 28px 30px 12px; }
+.doc-foot { display: flex; justify-content: space-between; gap: 12px; padding: 14px 22px; border-top: 1px solid var(--line); }
+.doc-foot button {
+  display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--clay-chip); color: var(--ink); font-family: var(--font); font-size: 0.8rem; font-weight: 600;
+  box-shadow: 0 8px 12px -6px var(--clay-drop), inset 0 4px 6px var(--clay-hi), inset 0 -5px 8px var(--clay-lo);
+  transition: transform 0.3s var(--ease);
+}
+.doc-foot button:hover { transform: translateY(-2px); }
+.doc-foot button[disabled] { opacity: 0.4; pointer-events: none; }
+
+/* case content inside the viewer */
+.doc-head .meta { margin-bottom: 4px; }
+.doc-head h2 { margin: 0 0 24px; font-size: clamp(1.4rem, 3vw, 1.9rem); }
+.case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 36px; align-items: start; padding-bottom: 18px; }
+.case-grid h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.case-grid h3 i { color: var(--ink); font-size: 0.85rem; }
+.case-grid p, .case-grid li { font-size: 0.9rem; }
+.case-grid .wide { grid-column: 1 / -1; }
+.steps { display: grid; gap: 10px; counter-reset: step; }
+.steps li { position: relative; padding-left: 36px; counter-increment: step; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 1px; width: 24px; height: 24px; border-radius: 50%; background: var(--clay-chip); color: var(--ink); display: grid; place-items: center; font-size: 0.72rem; font-weight: 600; box-shadow: inset 0 2px 3px var(--clay-hi), inset 0 -3px 4px var(--clay-lo); }
+code { padding: 1px 7px; border-radius: 6px; background: var(--tag); color: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8rem; }
+.lesson { padding: 18px 22px; border-radius: 20px; background: var(--clay-chip); box-shadow: inset 0 5px 7px var(--clay-hi), inset 0 -6px 9px var(--clay-lo); }
+.lesson p { color: var(--ink); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px) {
+  .cards-row { grid-template-columns: repeat(3, 1fr); }
+  .doc-card:nth-child(n) { margin-top: 0; }
+}
+@media (max-width: 860px) {
+  .folder-wrap { --overlap: 44px; }
+  .folder-back { padding: 56px 18px 26px; border-radius: 34px; }
+  .folder-tab { left: 28px; }
+  .cards-row { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .doc-card { min-height: 220px; }
+  .doc-card:last-child { grid-column: 1 / -1; }
+  .folder-front { margin-inline: -8px; padding: 36px 24px 30px; }
+
+  .doc-modal { padding: 10px; }
+  .doc-window { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: calc(100vh - 20px); border-radius: 28px; }
+  .doc-side { flex-direction: row; padding: 14px 12px 4px; gap: 8px; overflow-x: auto; overflow-y: hidden; }
+  .doc-side-title { display: none; }
+  .doc-tab { width: auto; flex-shrink: 0; padding: 8px 12px; }
+  .doc-tab small, .doc-tab strong { display: none; }
+  .doc-tab::after { content: attr(data-short); font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+  .doc-main { margin: 8px; }
+  .doc-body { padding: 22px 20px 8px; }
+  .case-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .cards-row { grid-template-columns: 1fr; }
+  .doc-card, .doc-card:last-child { min-height: 0; grid-column: auto; }
+}
+
+/* list bullets used inside the case files (from project.css) */
+.block-list { list-style: none; display: grid; gap: 10px; }
+.block-list li { position: relative; padding-left: 22px; }
+.block-list li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+
+/* ============ AI LITERACY EVIDENCE ============ */
+.ai-card-wrap { max-width: 760px; margin: 0 auto; }
+.ai-card {
+  width: 100%; display: flex; align-items: center; gap: 22px; padding: 28px 30px;
+  border: 0; border-radius: 28px; background: var(--clay-card); color: var(--ink);
+  font-family: var(--font); text-align: left; cursor: pointer;
+  box-shadow: 0 18px 26px -14px var(--clay-drop), inset 0 8px 10px var(--clay-hi), inset 0 -10px 14px var(--clay-lo);
+  transition: transform 0.45s var(--ease), box-shadow 0.35s;
+}
+.ai-card:hover, .ai-card:focus-visible {
+  transform: translateY(-10px) rotate(-0.4deg);
+  box-shadow: 0 34px 36px -16px var(--clay-drop), inset 0 8px 10px var(--clay-hi), inset 0 -10px 14px var(--clay-lo);
+}
+.ai-card:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.ai-card > div { flex: 1; min-width: 0; }
+.ai-card h3 { margin: 0; font-size: 1.25rem; }
+.ai-card p { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
+.ai-open { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: color 0.25s; }
+.ai-card:hover .ai-open, .ai-card:focus-visible .ai-open { color: var(--ink); }
+
+.ai-modal {
+  position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px;
+  background: rgba(24, 14, 52, 0.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+}
+.ai-modal.open { opacity: 1; visibility: visible; }
+.ai-window {
+  width: min(960px, 100%); height: min(800px, calc(100vh - 40px));
+  display: flex; flex-direction: column; padding: 14px; border-radius: 36px; overflow: hidden;
+  background: var(--clay-body);
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.6), inset 0 12px 16px var(--clay-hi), inset 0 -16px 24px var(--clay-lo);
+  transform: translateY(18px) scale(0.97); transition: transform 0.45s var(--ease);
+}
+.ai-modal.open .ai-window { transform: none; }
+.ai-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 8px 14px; }
+.ai-bar code { padding: 6px 14px; border-radius: 99px; background: var(--clay-chip); color: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.78rem; }
+.ai-body {
+  flex: 1; overflow-y: auto; padding: 26px 30px; border-radius: 26px; background: var(--clay-card);
+  box-shadow: inset 0 8px 12px var(--clay-lo), inset 0 -4px 8px var(--clay-hi);
+}
+.ai-body .ai-meta { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.ai-body h2 { margin: 6px 0 18px; font-size: clamp(1.4rem, 3vw, 1.8rem); }
+.ai-body h3 { margin: 26px 0 8px; font-size: 1rem; }
+.ai-body p { font-size: 0.92rem; margin-bottom: 10px; }
+.ai-table-wrap { overflow-x: auto; border-radius: 18px; background: var(--clay-chip); margin-top: 8px; }
+.ai-table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.82rem; }
+.ai-table th, .ai-table td { text-align: left; padding: 12px 14px; vertical-align: top; border-bottom: 1px solid var(--line); }
+.ai-table th { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.ai-table tr:last-child td { border-bottom: 0; }
+.ai-note { margin-top: 18px; padding: 14px 18px; border-radius: 18px; background: var(--clay-chip); font-size: 0.85rem; }
+@media (max-width: 600px) {
+  .ai-card { flex-direction: column; align-items: flex-start; padding: 22px; }
+}
+@media (max-width: 860px) {
+  .ai-modal { padding: 10px; }
+  .ai-window { height: calc(100vh - 20px); border-radius: 28px; }
+  .ai-body { padding: 20px; }
+}
+/* ============ MOCK INTERVIEW VIDEO ============ */
+.video-card, .answer-card { cursor: pointer; transition: transform 0.45s var(--ease), box-shadow 0.35s; }
+.video-card:hover, .video-card:focus-visible, .answer-card:hover, .answer-card:focus-visible { transform: translateY(-8px); }
+.video-card:focus-visible, .answer-card:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.video-open {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 14px;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  transition: color 0.25s, gap 0.3s var(--ease);
+}
+.video-card:hover .video-open, .video-card:focus-visible .video-open, .answer-card:hover .video-open, .answer-card:focus-visible .video-open { color: var(--ink); gap: 12px; }
+.video-open i { font-size: 1rem; }
+
+.video-modal {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center; padding: 56px 16px 24px;
+  background: rgba(8, 11, 20, 0.88);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.video-modal.open { opacity: 1; visibility: visible; }
+.video-modal video {
+  width: min(96vw, 1100px); max-height: calc(100vh - 100px);
+  border-radius: 12px; background: #000; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  transform: scale(0.96); transition: transform 0.35s var(--ease);
+}
+.video-modal.open video { transform: none; }
+
+.ai-body .block-list li, .ai-body .steps li { font-size: 0.92rem; }
+.ai-body .steps { margin-bottom: 10px; }
+.ai-body .ai-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; font-weight: 600; font-size: 0.85rem; color: var(--ink); text-decoration: underline; }
+
+/* ============ ABOUT ME ============ */
+.about-text p { margin-bottom: 12px; line-height: 1.7; }
+.about-text p:last-child { margin-bottom: 0; }
+.about-card-wrap { margin-bottom: 8px; }
+</style>
+<script>
+  /* apply saved theme before the page paints, so there is no flash */
+  try { var t = localStorage.getItem("theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader-inner">
+    <p class="loader-name">Rowena Clores</p>
+    <p class="loader-sub">Portfolio loading</p>
+    <div class="loader-bar"><span id="loaderBar"></span></div>
+  </div>
+</div>
+
+<!-- FLOATING NAV -->
+<header class="nav-wrap">
+  <div class="nav">
+    <a class="logo" href="#home">PORTFOLIO.</a>
+
+    <nav id="menu" aria-label="Main">
+      <a href="#home" class="active">Home</a>
+      <a href="#profile">Profile</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#problem-solving">Problem-Solving</a>
+      <a href="#employability">Employability</a>
+      <a href="#resume">Resume</a>
+      <a href="#certificates">Certificates</a>
+      <a href="#ai-literacy">AI Literacy</a>
+      <a href="#github">GitHub</a>
+      <a href="#contact">Contact</a>
+      <a href="#reflection">Reflection</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Switch light or dark mode"><i class="fa-solid fa-moon"></i></button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="hero">
+  <div class="hero-text">
+    <h1 class="reveal">Hi, I'm Rowena Clores</h1>
+    <p class="typing reveal"><span id="typed"></span><span class="caret"></span></p>
+    <p class="lead reveal">BSIT student specializing in Web Development and Data Analysis. I build reliable, well-organized technology that is simple to use.</p>
+    <div class="buttons reveal">
+      <a class="btn dark" href="#projects">Explore work <i class="fa-solid fa-arrow-right"></i></a>
+      <a class="btn light" href="resume.pdf" download>Download CV <i class="fa-solid fa-download"></i></a>
+    </div>
+    <div class="connect reveal">
+      <p class="label">Connect</p>
+      <div class="socials">
+        <a href="https://www.facebook.com/rowena.c.espayos" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://github.com/Weng11546" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/rowena-clores-4181a5334/?isSelfProfile=true" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual reveal">
+    <div class="photo-circle">
+      <img src="hero.jpg" alt="Photo of Rowena Clores">
+    </div>
+    <ul class="chips">
+      <li><span class="chip-icon"><i class="fa-solid fa-graduation-cap"></i></span> BSIT Student</li>
+      <li><span class="chip-icon"><i class="fa-solid fa-code"></i></span> Web Developer And DataAnalyst</li>
+      <li><span class="chip-icon"><i class="fa-solid fa-bullseye"></i></span>IT Project Manager</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 1. PROFESSIONAL PROFILE -->
+<section id="profile">
+  <header class="sec-head reveal">
+    <p class="label">Discover</p>
+    <h2>Professional Profile</h2>
+  </header>
+
+  <div class="profile-grid">
+    <div class="profile-photo reveal">
+      <img src="photo.jpg" alt="Photo of Rowena Clores">
+    </div>
+
+    <div class="profile-info">
+      <div class="two-col">
+        <div class="reveal">
+          <h3 class="underlined">Who Am I</h3>
+          <p>I'm Rowena Clores, a BSIT student specializing in Web Development and Data Analysis. I am passionate about creating efficient and user-friendly web applications and extracting meaningful insights from data.</p>
+        </div>
+        <div class="reveal">
+          <h3 class="underlined">My Goal</h3>
+          <p>My goal is to become a IT Project Manager that can lead teams in developing innovative web solutions.</p>
+        </div>
+      </div>
+
+      <h3 class="bar reveal">About Me</h3>
+      <div class="reveal about-card-wrap">
+        <button class="ai-card about-card" type="button" id="aboutOpen" aria-haspopup="dialog">
+          <span class="chip-icon big"><i class="fa-solid fa-user"></i></span>
+          <div>
+            <h3>Read more about me</h3>
+            <p>My BSIT background, technical strengths, career goals, and the kind of IT work I want to do.</p>
+          </div>
+          <span class="ai-open">Open <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+      </div>
+
+      <h3 class="bar reveal">Personal Details</h3>
+      <dl class="details reveal">
+        <div><dt>Full name</dt><dd>Rowena Clores</dd></div>
+        <div><dt>BSIT specialization</dt><dd>Web Development and Data Analysis</dd></div>
+        <div><dt>Target IT position</dt><dd>IT Project Manager</dd></div>
+        <div><dt>Preferred IT field</dt><dd>Web Development and Data Analysis</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- 2. TECHNICAL SKILLS -->
+<section id="skills">
+  <header class="sec-head reveal">
+    <p class="label">Expertise</p>
+    <h2>Technical Skills</h2>
+  </header>
+
+  <div class="skill-row reveal">
+    <div class="skill-intro">
+      <h3>Programming</h3>
+      <p>The languages I use to build websites and applications.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><i class="fa-brands fa-html5"></i><span>HTML</span></div>
+      <div class="tile"><i class="fa-brands fa-css3-alt"></i><span>CSS</span></div>
+      <div class="tile"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
+    </div>
+  </div>
+
+  <div class="skill-row reveal">
+    <div class="skill-intro">
+      <h3>Tools</h3>
+      <p>The tools that help me work faster and stay organized.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
+      <div class="tile"><i class="fa-brands fa-github"></i><span>GitHub</span></div>
+      <div class="tile"><i class="fa-solid fa-terminal"></i><span>VS Code</span></div>
+      <div class="tile"><i class="fa-brands fa-figma"></i><span>Figma</span></div>
+    </div>
+  </div>
+
+  <div class="skill-row reveal">
+    <div class="skill-intro">
+      <h3>Other skills</h3>
+      <p>Support skills that round out my IT knowledge.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><i class="fa-solid fa-network-wired"></i><span>Networking</span></div>
+      <div class="tile"><i class="fa-solid fa-screwdriver-wrench"></i><span>Troubleshooting</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. PROJECTS -->
+<section id="projects">
+  <header class="sec-head center reveal">
+    <p class="label">Portfolio</p>
+    <h2>Selected Works</h2>
+  </header>
+
+  <div class="cards three">
+    <article class="project reveal">
+      <div class="thumb">
+        <img src="POS-logo.png" alt="POS logo">
+      </div>
+      <div class="project-body">
+        <h3>Poultry Feed Stock Tracking with POS Application</h3>
+        <p>Automate inventory management and sales transactions, improve the accuracy of stock records, and enhance the efficiency of operations in poultry feed businesses.</p>
+        <a class="btn outline full" href="project1.html">View details</a>
+      </div>
+    </article>
+    <article class="project reveal">
+      <div class="thumb">
+        <img src="SocialMedia-logo.png" alt="Excel cover sheet of the Social Media Engagement Analysis workbook">
+      </div>
+      <div class="project-body">
+        <h3>Social Media Engagement Analysis</h3>
+        <p>An Excel case study that analyzes 50 social media posts to show which platforms and content types earn the most engagement.</p>
+        <a class="btn outline full" href="project2.html">View details</a>
+      </div>
+    </article>
+    <article class="project reveal">
+      <div class="thumb">
+        <img src="ExpenseFlow-logo.jpg" alt="ExpenseFlow logo">
+      </div>
+      <div class="project-body">
+        <h3>Expense Tracking Application</h3>
+        <p>A web-based application for managing and analyzing personal or business expenses.</p>
+        <a class="btn outline full" href="project3.html">View details</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- 4. PROBLEM-SOLVING (clay folder: click a file to read the case) -->
+<section id="problem-solving">
+  <header class="sec-head center reveal">
+    <p class="label">My process</p>
+    <h2>Problem-Solving</h2>
+  </header>
+
+  <div class="folder-wrap">
+  <div class="folder reveal">
+    <div class="folder-back">
+      <span class="folder-tab">Case files</span>
+
+      <div class="cards-row">
+        <button class="doc-card" type="button" data-doc="0" aria-label="Open file 01: Wi-Fi connection">
+          <span class="doc-top"><span class="clay-chip"><i class="fa-solid fa-wifi"></i></span><span class="doc-num">01</span></span>
+          <h3>Wi-Fi connection</h3>
+          <span class="doc-file">01-wifi-connection.md</span>
+          <span class="doc-lines"><i></i><i></i></span>
+          <span class="doc-open">Open file <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+        <button class="doc-card" type="button" data-doc="1" aria-label="Open file 02: Slow computer">
+          <span class="doc-top"><span class="clay-chip"><i class="fa-solid fa-gauge-high"></i></span><span class="doc-num">02</span></span>
+          <h3>Slow computer</h3>
+          <span class="doc-file">02-slow-computer.md</span>
+          <span class="doc-lines"><i></i><i></i></span>
+          <span class="doc-open">Open file <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+        <button class="doc-card" type="button" data-doc="2" aria-label="Open file 03: Gradle build failure">
+          <span class="doc-top"><span class="clay-chip"><i class="fa-brands fa-android"></i></span><span class="doc-num">03</span></span>
+          <h3>Gradle build failure</h3>
+          <span class="doc-file">03-gradle-build.md</span>
+          <span class="doc-lines"><i></i><i></i></span>
+          <span class="doc-open">Open file <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+        <button class="doc-card" type="button" data-doc="3" aria-label="Open file 04: Broken website images">
+          <span class="doc-top"><span class="clay-chip"><i class="fa-regular fa-image"></i></span><span class="doc-num">04</span></span>
+          <h3>Broken website images</h3>
+          <span class="doc-file">04-broken-images.md</span>
+          <span class="doc-lines"><i></i><i></i></span>
+          <span class="doc-open">Open file <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+        <button class="doc-card" type="button" data-doc="4" aria-label="Open file 05: Discord webhook not sending">
+          <span class="doc-top"><span class="clay-chip"><i class="fa-solid fa-plug"></i></span><span class="doc-num">05</span></span>
+          <h3>Discord webhook</h3>
+          <span class="doc-file">05-discord-webhook.md</span>
+          <span class="doc-lines"><i></i><i></i></span>
+          <span class="doc-open">Open file <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+        <button class="doc-card" type="button" data-doc="5" aria-label="Open file 06: SQL injection">
+          <span class="doc-top"><span class="clay-chip"><i class="fa-solid fa-user-shield"></i></span><span class="doc-num">06</span></span>
+          <h3>SQL injection</h3>
+          <span class="doc-file">06-sql-injection.md</span>
+          <span class="doc-lines"><i></i><i></i></span>
+          <span class="doc-open">Open file <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="folder-front">
+      <div>
+        <h2><i class="fa-solid fa-screwdriver-wrench"></i> IT Troubleshooting and Cybersecurity</h2>
+        <p>IT troubleshooting cases: what broke, how I found the cause, and what I learned.</p>
+        <p>Cybersecurity incidents: what happened, how I responded, and what I learned.</p>
+        <p class="by">Troubleshooting and Cybersecurity log &middot; Rowena Clores</p>
+      </div>
+      <span class="count-pill"><i class="fa-regular fa-copy"></i> 6 files</span>
+    </div>
+  </div>
+  <p class="folder-hint reveal"><i class="fa-solid fa-hand-pointer"></i>Click any file to open it</p>
+</div>
+
+  <!-- case content, read by the file viewer (hidden on the page) -->
+  <div hidden id="caseData">
+
+  <div class="case-doc" data-file="01-wifi-connection.md" data-title="Wi-Fi connection" data-short="Wi-Fi" data-icon="fa-solid fa-wifi">
+    <header class="doc-head"><p class="meta">Case 01 &middot; Networking</p><h2>Computer cannot connect to Wi-Fi</h2></header>
+    <div class="case-grid">
+      <div>
+        <h3><i class="fa-solid fa-circle-exclamation"></i> Problem</h3>
+        <p>A laptop shows &ldquo;Connected, no internet&rdquo; or cannot join the Wi-Fi network at all, while other devices in the same place work normally.</p>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-magnifying-glass"></i> Possible causes</h3>
+        <ul class="block-list">
+          <li>Wi-Fi adapter disabled, or airplane mode turned on</li>
+          <li>Outdated or corrupted network driver</li>
+          <li>Incorrect IP configuration (wrong static IP, or no DHCP lease)</li>
+          <li>Router problem (needs restart, MAC filtering, no ISP service)</li>
+          <li>DNS problem (pages do not load but the connection exists)</li>
+        </ul>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-stethoscope"></i> Diagnostic procedure</h3>
+        <ol class="steps">
+          <li>Check that airplane mode is off and the Wi-Fi adapter is enabled. Test whether a phone works on the same network.</li>
+          <li>Run <code>ipconfig /all</code> and check for a valid IP. An address starting with 169.254 means no DHCP lease was received.</li>
+          <li>Ping the router (<code>ping 192.168.1.1</code>). If it replies, the local link is fine.</li>
+          <li>Ping a public IP (<code>ping 8.8.8.8</code>). If it replies, the internet works.</li>
+          <li>Ping a name (<code>ping google.com</code>). If the IP works but the name fails, the cause is DNS.</li>
+        </ol>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-wrench"></i> Solution</h3>
+        <ol class="steps">
+          <li>Re-enable the adapter and restart the router.</li>
+          <li>Run <code>ipconfig /release</code>, <code>ipconfig /renew</code> and <code>ipconfig /flushdns</code>.</li>
+          <li>Set the adapter to obtain IP and DNS automatically, or use DNS 8.8.8.8.</li>
+          <li>Update or reinstall the driver in Device Manager if the adapter still fails.</li>
+        </ol>
+      </div>
+      <div class="wide lesson">
+        <h3><i class="fa-solid fa-lightbulb"></i> Lesson learned</h3>
+        <p>Troubleshoot in layers: device, local network, internet, then DNS. The ping results tell exactly which layer is broken, so I do not waste time changing settings at random.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-doc" data-file="02-slow-computer.md" data-title="Slow computer" data-short="Slow PC" data-icon="fa-solid fa-gauge-high">
+    <header class="doc-head"><p class="meta">Case 02 &middot; Hardware &amp; Operating System</p><h2>Computer runs very slowly</h2></header>
+    <div class="case-grid">
+      <div>
+        <h3><i class="fa-solid fa-circle-exclamation"></i> Problem</h3>
+        <p>A computer takes several minutes to boot, programs freeze, and the whole system lags even when only a browser is open.</p>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-magnifying-glass"></i> Possible causes</h3>
+        <ul class="block-list">
+          <li>Too many startup programs</li>
+          <li>Disk at 100% usage, or a failing hard drive</li>
+          <li>Not enough RAM for the tasks being run</li>
+          <li>Malware or background updates</li>
+          <li>Low free storage space on the system drive</li>
+        </ul>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-stethoscope"></i> Diagnostic procedure</h3>
+        <ol class="steps">
+          <li>Open Task Manager (Ctrl + Shift + Esc) and see which resource is at 100%: CPU, memory or disk.</li>
+          <li>Check the Startup tab for programs with high startup impact.</li>
+          <li>Check free space on drive C:. Under about 10% free causes slowdowns.</li>
+          <li>Run a full antivirus scan.</li>
+          <li>Run <code>sfc /scannow</code> to check system files and check the drive health status.</li>
+        </ol>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-wrench"></i> Solution</h3>
+        <ol class="steps">
+          <li>Disable unneeded startup programs.</li>
+          <li>Delete temporary files and uninstall unused software to free space.</li>
+          <li>Remove any malware found and finish pending Windows updates.</li>
+          <li>If the disk or memory remains the bottleneck, replace the hard drive with an SSD or add RAM.</li>
+        </ol>
+      </div>
+      <div class="wide lesson">
+        <h3><i class="fa-solid fa-lightbulb"></i> Lesson learned</h3>
+        <p>Measure before fixing. Task Manager shows the real bottleneck, so I fix that one resource instead of reinstalling the whole system. Regular cleanup also prevents the problem from coming back.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-doc" data-file="03-gradle-build.md" data-title="Gradle build failure" data-short="Gradle" data-icon="fa-brands fa-android">
+    <header class="doc-head"><p class="meta">Case 03 &middot; Software Development</p><h2>Android Studio Gradle sync or build fails</h2></header>
+    <div class="case-grid">
+      <div>
+        <h3><i class="fa-solid fa-circle-exclamation"></i> Problem</h3>
+        <p>While developing a Kotlin Android app, Android Studio reports &ldquo;Gradle sync failed&rdquo; or the build stops with errors, and the app cannot run.</p>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-magnifying-glass"></i> Possible causes</h3>
+        <ul class="block-list">
+          <li>Android Gradle Plugin, Gradle and JDK versions that are not compatible</li>
+          <li>A dependency that cannot be downloaded (no internet, proxy or wrong version number)</li>
+          <li>Corrupted Gradle or IDE cache</li>
+          <li>A syntax or import error in the code or in the <code>build.gradle</code> file</li>
+          <li>Missing SDK platform or build tools</li>
+        </ul>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-stethoscope"></i> Diagnostic procedure</h3>
+        <ol class="steps">
+          <li>Open the Build tab and read the <strong>first</strong> error message, not the last. Later errors are usually side effects.</li>
+          <li>Check whether the error mentions a dependency download, a version conflict or a Java version.</li>
+          <li>Confirm internet access and that the Gradle JDK in Settings matches what the project needs.</li>
+          <li>Run <code>./gradlew build --stacktrace</code> in the terminal for more detail.</li>
+          <li>Check recent changes: undo the last edit to <code>build.gradle</code> and see whether the error disappears.</li>
+        </ol>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-wrench"></i> Solution</h3>
+        <ol class="steps">
+          <li>Fix the specific cause: align the plugin, Gradle and JDK versions, correct the dependency version, or install the missing SDK component.</li>
+          <li>Run <strong>Build &rarr; Clean Project</strong>, then sync again.</li>
+          <li>If the cache is corrupted, use <strong>File &rarr; Invalidate Caches / Restart</strong>.</li>
+        </ol>
+      </div>
+      <div class="wide lesson">
+        <h3><i class="fa-solid fa-lightbulb"></i> Lesson learned</h3>
+        <p>Read the first error and change one thing at a time. Committing working code to Git before upgrading versions lets me roll back quickly when an upgrade breaks the build.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-doc" data-file="04-broken-images.md" data-title="Broken website images" data-short="Images" data-icon="fa-regular fa-image">
+    <header class="doc-head"><p class="meta">Case 04 &middot; Web Development</p><h2>Images and styles do not load on my website</h2></header>
+    <div class="case-grid">
+      <div>
+        <h3><i class="fa-solid fa-circle-exclamation"></i> Problem</h3>
+        <p>A web page works on my computer, but after uploading it online the photos show as broken icons, or the page appears without its styling.</p>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-magnifying-glass"></i> Possible causes</h3>
+        <ul class="block-list">
+          <li>Wrong file path, or the file was not uploaded</li>
+          <li>File name case mismatch (<code>Hero.jpg</code> vs <code>hero.jpg</code>)</li>
+          <li>Wrong or missing file extension (<code>.jpg</code> vs <code>.jpeg</code>)</li>
+          <li>Browser cache showing an old version</li>
+          <li>A typo in the <code>link</code> or <code>script</code> tag</li>
+        </ul>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-stethoscope"></i> Diagnostic procedure</h3>
+        <ol class="steps">
+          <li>Open browser DevTools (F12) and go to the Network tab, then reload the page.</li>
+          <li>Look for red entries with status <strong>404</strong>. They list exactly which files are missing.</li>
+          <li>Compare each failing path with the real file name in the project folder, letter by letter.</li>
+          <li>Check that the file exists in the repository or hosting folder.</li>
+          <li>Try a hard refresh (Ctrl + Shift + R) to rule out the cache.</li>
+        </ol>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-wrench"></i> Solution</h3>
+        <ol class="steps">
+          <li>Rename files and fix the paths so they match exactly, using lowercase names with no spaces.</li>
+          <li>Upload any missing files and commit them to GitHub.</li>
+          <li>Hard refresh and re-check the Network tab until no 404 remains.</li>
+        </ol>
+      </div>
+      <div class="wide lesson">
+        <h3><i class="fa-solid fa-lightbulb"></i> Lesson learned</h3>
+        <p>Windows ignores letter case in file names, but most web servers do not. I now use consistent lowercase file names and always check the Network tab first, since it names the exact problem.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-doc" data-file="05-discord-webhook.md" data-title="Discord webhook" data-short="Webhook" data-icon="fa-solid fa-plug">
+    <header class="doc-head"><p class="meta">Case 05 &middot; Application &amp; API Integration</p><h2>Discord webhook messages are not being sent from the app</h2></header>
+    <div class="case-grid">
+      <div>
+        <h3><i class="fa-solid fa-circle-exclamation"></i> Problem</h3>
+        <p>An Android app that sends records to a Discord channel through a webhook runs without crashing, but no message ever appears in Discord.</p>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-magnifying-glass"></i> Possible causes</h3>
+        <ul class="block-list">
+          <li>Missing <code>INTERNET</code> permission in <code>AndroidManifest.xml</code></li>
+          <li>Network call run on the main thread, or its error silently ignored</li>
+          <li>Webhook URL deleted, copied incorrectly or regenerated</li>
+          <li>Invalid JSON payload (HTTP 400) or rate limit reached (HTTP 429)</li>
+          <li>The phone has no internet connection</li>
+        </ul>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-stethoscope"></i> Diagnostic procedure</h3>
+        <ol class="steps">
+          <li>Test the webhook outside the app with Postman or <code>curl</code>. If the message appears, the webhook is fine and the bug is in the app.</li>
+          <li>Log the HTTP response code and body in Logcat. 404 means a wrong or deleted URL, 400 means bad JSON, 429 means too many requests.</li>
+          <li>Check Logcat for <code>NetworkOnMainThreadException</code> or <code>SecurityException</code>.</li>
+          <li>Confirm the manifest contains the internet permission and that the device is online.</li>
+        </ol>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-wrench"></i> Solution</h3>
+        <ol class="steps">
+          <li>Add <code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;</code> to the manifest.</li>
+          <li>Move the request into a coroutine on <code>Dispatchers.IO</code> and wrap it in try/catch with logging.</li>
+          <li>Regenerate the webhook URL if needed and correct the JSON fields.</li>
+          <li>Wait and retry when the response is 429.</li>
+        </ol>
+      </div>
+      <div class="wide lesson">
+        <h3><i class="fa-solid fa-lightbulb"></i> Lesson learned</h3>
+        <p>Never let network errors fail silently: logging the response code turns a mystery into a one-line answer. Also, a webhook URL works like a password, so it should not be shared publicly or committed to GitHub.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-doc" data-file="06-sql-injection.md" data-title="SQL injection" data-short="SQLi" data-icon="fa-solid fa-user-shield">
+    <header class="doc-head"><p class="meta">Case 06 &middot; Web Security</p><h2>SQL injection in a login form</h2></header>
+    <div class="case-grid">
+      <div>
+        <h3><i class="fa-solid fa-circle-exclamation"></i> What is the vulnerability</h3>
+        <p>SQL injection happens when user input is placed directly into a database query as part of the SQL command itself, instead of being treated only as data. Because the input can change the structure of the query, an attacker can alter what the database is asked to do. A login form that builds its query by joining the typed username and password into a text string is a common example.</p>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-magnifying-glass"></i> How it can happen</h3>
+        <ul class="block-list">
+          <li>SQL statements built by joining or formatting strings with user input</li>
+          <li>Relying only on client-side (browser) validation</li>
+          <li>Detailed database error messages shown to the user, which reveal the query structure</li>
+          <li>Database accounts with more permissions than the application needs</li>
+        </ul>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-triangle-exclamation"></i> Risks</h3>
+        <p>An attacker may bypass a login, read records they should not see, change or delete data, or expose personal information. In some server setups, the damage can extend beyond the database. Because the flaw sits in a common feature like login or search, a single weakness can affect every user of the application.</p>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-code"></i> Prevention for developers</h3>
+        <ol class="steps">
+          <li>Use parameterized queries (prepared statements), so the database always treats input as a value: <code>SELECT * FROM users WHERE username = ?</code>, with the input passed separately.</li>
+          <li>Use the query builder or ORM of the framework in its safe, parameterized form, and avoid raw string concatenation.</li>
+          <li>Validate input on the server: check type, length and format, and accept only expected values where possible.</li>
+          <li>Store passwords as salted hashes (for example bcrypt or Argon2), never as plain text.</li>
+        </ol>
+      </div>
+      <div>
+        <h3><i class="fa-solid fa-shield-halved"></i> Security practices</h3>
+        <ul class="block-list">
+          <li>Give each application database account only the permissions it needs (least privilege).</li>
+          <li>Show generic error messages to users and log the details on the server.</li>
+          <li>Review code for query construction, and use static analysis tools in the development workflow.</li>
+          <li>Keep frameworks, drivers and the database server updated.</li>
+          <li>Learn the OWASP Top 10 and test only applications you own or have written permission to test.</li>
+        </ul>
+      </div>
+      <div class="wide lesson">
+        <h3><i class="fa-solid fa-lightbulb"></i> Lesson learned</h3>
+        <p>SQL injection is prevented by separating code from data. Input validation helps, but parameterized queries remove the entire class of bug, so they should be the default. Security works best in layers: safe code, least privilege, careful error handling and regular review.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- 5. EMPLOYABILITY -->
+<section id="employability">
+  <header class="sec-head center reveal">
+    <p class="label">Ready for work</p>
+    <h2>Employability</h2>
+  </header>
+
+  <div class="cards four">
+    <article class="info-card answer-card reveal" role="button" tabindex="0" aria-haspopup="dialog" data-answer="communication" aria-label="Read my answer: Communication">
+      <span class="chip-icon"><i class="fa-solid fa-comments"></i></span>
+      <h3>Communication</h3>
+      <p>I explain ideas by starting with the problem, using plain language and examples, checking that my audience understands, and confirming decisions in writing.</p>
+      <span class="video-open"><i class="fa-solid fa-eye"></i> Preview answer</span>
+    </article>
+    <article class="info-card answer-card reveal" role="button" tabindex="0" aria-haspopup="dialog" data-answer="teamwork" aria-label="Read my answer: Teamwork">
+      <span class="chip-icon"><i class="fa-solid fa-people-group"></i></span>
+      <h3>Teamwork</h3>
+      <p>Group project: Poultry Feed Stock Tracking with POS Application, built with my team to manage inventory and sales for poultry feed businesses.</p>
+      <span class="video-open"><i class="fa-solid fa-eye"></i> Preview answer</span>
+    </article>
+    <article class="info-card answer-card reveal" role="button" tabindex="0" aria-haspopup="dialog" data-answer="time" aria-label="Read my answer: Time management">
+      <span class="chip-icon"><i class="fa-solid fa-clock"></i></span>
+      <h3>Time management</h3>
+      <p>Example of meeting a deadline.</p>
+      <span class="video-open"><i class="fa-solid fa-eye"></i> Preview answer</span>
+    </article>
+    <article class="info-card video-card reveal" id="videoOpen" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Watch the mock interview video">
+      <span class="chip-icon"><i class="fa-solid fa-user-tie"></i></span>
+      <h3>Mock interview</h3>
+      <p>Summary of your mock IT job interview and feedback received.</p>
+      <span class="video-open"><i class="fa-solid fa-circle-play"></i> Watch video</span>
+    </article>
+  </div>
+</section>
+
+<!-- 6. RESUME -->
+<section id="resume">
+  <header class="sec-head center reveal">
+    <p class="label">Background</p>
+    <h2>Resume</h2>
+  </header>
+
+  <div class="cards three">
+    <article class="info-card reveal">
+      <span class="chip-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+      <h3>Education</h3>
+      <p><strong>Bachelor of Science in Information Technology</strong><br>Datamex College of Saint Adeline, 2026 – 2027</p>
+    </article>
+    <article class="info-card reveal">
+      <span class="chip-icon"><i class="fa-solid fa-star"></i></span>
+      <h3>Highlights</h3>
+      <p>Add two or three key skills or achievements.</p>
+      <a class="btn dark" href="resume.pdf" download>Download resume <i class="fa-solid fa-download"></i></a>
+    </article>
+  </div>
+</section>
+
+<!-- 7. CERTIFICATES / ACHIEVEMENTS (click one to view the certificate) -->
+<section id="certificates">
+  <header class="sec-head center reveal">
+    <p class="label">Recognition</p>
+    <h2>Certificates &amp; Achievements</h2>
+  </header>
+
+  <ul class="cert-list">
+    <li class="reveal">
+      <a class="cert-link" href="cert4.jpg" data-alt="Certificate of Participation: IT Infrastructure and Cloud Computing, Building the Digital Future">
+        <span class="chip-icon"><i class="fa-solid fa-certificate"></i></span>
+        <div><strong>IT Infrastructure and Cloud Computing: Building the Digital Future</strong><span>Ethel Programming Computer Programming Services, August 8, 2026</span></div>
+        <i class="fa-solid fa-expand cert-open" aria-hidden="true"></i>
+      </a>
+    </li>
+    <li class="reveal">
+      <a class="cert-link" href="cert1.pdf" data-alt="Certificate of Participation: Cyber Awareness, Cyber Threats in 2026 and How to Stay Safe">
+        <span class="chip-icon"><i class="fa-solid fa-certificate"></i></span>
+        <div><strong>Cyber Awareness: Cyber Threats in 2026 and How to Stay Safe</strong><span>UpskillTechPH Training Services, August 8, 2026</span></div>
+        <i class="fa-solid fa-expand cert-open" aria-hidden="true"></i>
+      </a>
+    </li>
+    <li class="reveal">
+      <a class="cert-link" href="cert2.pdf" data-alt="Certificate of Participation: Web Dev 101, System Integration, Connecting Apps via API">
+        <span class="chip-icon"><i class="fa-solid fa-certificate"></i></span>
+        <div><strong>Web Dev 101: System Integration | Connecting Apps via API</strong><span>UpskillTechPH Training Services, August 8, 2026</span></div>
+        <i class="fa-solid fa-expand cert-open" aria-hidden="true"></i>
+      </a>
+    </li>
+    <li class="reveal">
+      <a class="cert-link" href="cert3.pdf" data-alt="Certificate of Participation: Arduino 101, Coding Meets Hardware">
+        <span class="chip-icon"><i class="fa-solid fa-certificate"></i></span>
+        <div><strong>Arduino 101: Coding Meets Hardware</strong><span>UpskillTechPH Training Services, August 5, 2026</span></div>
+        <i class="fa-solid fa-expand cert-open" aria-hidden="true"></i>
+      </a>
+    </li>
+  </ul>
+</section>
+
+<!-- 7b. AI LITERACY EVIDENCE (click to preview the log) -->
+<section id="ai-literacy">
+  <header class="sec-head center reveal">
+    <p class="label">Responsible AI use</p>
+    <h2>AI Literacy Evidence</h2>
+  </header>
+  <div class="ai-card-wrap reveal">
+    <button class="ai-card" type="button" id="aiOpen" aria-haspopup="dialog">
+      <span class="chip-icon big"><i class="fa-solid fa-robot"></i></span>
+      <div>
+        <h3>My AI Literacy Evidence document</h3>
+        <p>An AI Usage Log showing what I used AI for, what I checked myself, and where AI got things wrong.</p>
+      </div>
+      <span class="ai-open">Preview document <i class="fa-solid fa-eye"></i></span>
+    </button>
+  </div>
+</section>
+
+<!-- 8. GITHUB -->
+<section id="github">
+  <div class="github-card reveal">
+    <span class="chip-icon big"><i class="fa-brands fa-github"></i></span>
+    <h2>GitHub</h2>
+    <p>Browse my code, repositories, and contributions.</p>
+    <a class="btn dark" href="https://github.com/Weng11546" target="_blank" rel="noopener">Visit my GitHub <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+  </div>
+</section>
+
+<!-- 9. CONTACT -->
+<section id="contact">
+  <header class="sec-head center reveal">
+    <p class="label">Get in touch</p>
+    <h2>Contact</h2>
+  </header>
+
+  <div class="contact-grid">
+    <ul class="contact-list reveal">
+      <li><span class="chip-icon"><i class="fa-solid fa-envelope"></i></span> rowenaclores03@gmail.com</li>
+      <li><span class="chip-icon"><i class="fa-solid fa-phone"></i></span> +63 963 409 8661</li>
+      <li><span class="chip-icon"><i class="fa-brands fa-linkedin-in"></i></span> linkedin.com/in/rowena-clores-4181a5334/?isSelfProfile=true</li>
+      <li><span class="chip-icon"><i class="fa-solid fa-location-dot"></i></span> Philippines</li>
+    </ul>
+
+    <form class="form-card reveal" action="#" method="post">
+      <h3>Send an email directly.</h3>
+      <label for="name">Name</label>
+      <input id="name" type="text" placeholder="Your name">
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="you@example.com">
+      <label for="message">Message</label>
+      <textarea id="message" rows="5" placeholder="Your message here..."></textarea>
+      <button class="btn dark full" type="submit">Send message</button>
+    </form>
+  </div>
+</section>
+
+<!-- 10. REFLECTION -->
+<section id="reflection">
+  <header class="sec-head center reveal">
+    <p class="label">Looking back</p>
+    <h2>Reflection</h2>
+  </header>
+  <blockquote class="quote reveal">
+<p>Before entering BSIT, I thought IT mostly meant fixing computers and making websites. My experience was limited to Microsoft Word, Excel and PowerPoint, which I used for school work and administrative tasks. I did not realize how much planning, organization and problem-solving sit behind every app people use.<br><br>
+
+The most important thing I learned is that technology matters only when it solves a real problem. My projects started with a need, such as a poultry feed business struggling with manual stock records, or people who could not track their spending. The code came after that. I also learned that careful work matters as much as technical skill. In my data analysis project, a few entry errors could have changed my conclusions if I had not checked for them. <br><br>
+
+The project that taught me the most was the Poultry Feed Stock Tracking with POS Application. It had real users in mind: owners, managers, inventory clerks and cashiers. I had to think about login roles, product search, validation and sales reports all at once. It taught me that a system is a set of connected parts, and that a sale affects stock levels. It also taught me to be honest about limitations and future improvements. <br><br>
+
+The hardest difficulty involved data and unfamiliar tools. In my Social Media Engagement Analysis, I found text and image posts with video lengths above zero, and most videos had no recorded length. I had to decide what to correct and what I could not conclude. In my app projects, learning Kotlin, Android Studio and Room Database while building meant many moments when nothing would run. I learned to read errors carefully and test one change at a time. <br><br>
+
+My skills have changed a lot. I started with basic office software. Now I can build web pages, write JavaScript and Python, use SQL, build Android apps, work with Git and GitHub, and analyze data in Excel. More importantly, I break problems into steps, test my assumptions and explain results in plain language. <br><br>
+
+I still need to improve in backend development, database design and security, because I depended on tools and guidance more than I would like. I also want to improve my testing habits, my clean coding, and my confidence presenting technical ideas to non-technical people. <br><br>
+
+I want to become an IT Project Manager with a strong foundation in web development and data analysis. Good managers understand the work their teams do, so I want to keep building and analyzing before I lead. I want to connect technical teams with the people they serve and keep projects organized and honest about progress. <br><br>
+
+I am ready to begin my career because I have already done the work the field requires. I have built real projects, handled messy data, documented my work and finished what I started. I may not have every answer, but I know how to find them, keep learning and work with others. I am not finished growing, and I am ready to begin.<br><br>  </p>
+  </blockquote>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Rowena Clores. All rights reserved.</p>
+</footer>
+
+<!-- CERTIFICATE POPUP -->
+<div class="cert-modal" id="certModal" role="dialog" aria-modal="true" aria-label="Certificate preview" aria-hidden="true">
+  <button class="cert-close" id="certClose" type="button" aria-label="Close preview"><i class="fa-solid fa-xmark"></i></button>
+  <img id="certImg" alt="">
+  <iframe id="certFrame" title="Certificate preview" hidden></iframe>
+  <a class="cert-newtab" id="certNewTab" href="#" target="_blank" rel="noopener" hidden>Not showing? Open the file <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+</div>
+
+<!-- FILE VIEWER -->
+<div class="doc-modal" id="docModal" role="dialog" aria-modal="true" aria-label="Case file" aria-hidden="true">
+  <div class="doc-window">
+    <aside class="doc-side" id="docSide" aria-label="Files in folder"></aside>
+    <div class="doc-main">
+      <div class="doc-bar">
+        <code id="docName"></code>
+        <button class="doc-close" id="docClose" type="button" aria-label="Close file"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="doc-body" id="docBody" tabindex="0"></div>
+      <div class="doc-foot">
+        <button type="button" id="docPrev"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+        <button type="button" id="docNext">Next <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MOCK INTERVIEW VIDEO POPUP -->
+<div class="video-modal" id="videoModal" role="dialog" aria-modal="true" aria-label="Mock interview video" aria-hidden="true">
+  <button class="cert-close" id="videoClose" type="button" aria-label="Close video"><i class="fa-solid fa-xmark"></i></button>
+  <video id="videoPlayer" controls playsinline preload="none" controlslist="nodownload">
+    <source src="wena_interview.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<!-- EMPLOYABILITY ANSWER PREVIEW (Communication, Teamwork, Time management) -->
+<div class="ai-modal" id="answerModal" role="dialog" aria-modal="true" aria-label="Employability answer" aria-hidden="true">
+  <div class="ai-window">
+    <div class="ai-bar">
+      <code id="answerName"></code>
+      <button class="doc-close" id="answerClose" type="button" aria-label="Close answer"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="ai-body" id="answerBody" tabindex="0"></div>
+  </div>
+</div>
+
+<div hidden id="answerData">
+
+  <div data-key="communication" data-file="communication.md">
+    <p class="ai-meta">Employability &middot; Rowena Clores</p>
+    <h2>Communication</h2>
+    <p>Good communication means the other person understands the idea the first time, whether they are a teammate, a client or an interviewer. This is how I explain ideas clearly.</p>
+    <h3>How I explain ideas</h3>
+    <ol class="steps">
+      <li><strong>Know my audience.</strong> A client or user wants to know what the system does for them. A teammate needs the technical details. I change my words to fit who is listening.</li>
+      <li><strong>Start with the problem.</strong> I begin with the need, then the solution, then the result.</li>
+      <li><strong>Use plain language.</strong> I say &ldquo;the system saves each sale and lowers the stock count&rdquo; instead of technical terms, and I explain any term I cannot avoid.</li>
+      <li><strong>Give one idea at a time,</strong> with an example, a screenshot or a short demo.</li>
+      <li><strong>Check understanding.</strong> I ask if it makes sense, listen to questions, and explain again in a different way when someone is confused.</li>
+      <li><strong>Confirm in writing.</strong> I summarize decisions so everyone remembers the same thing.</li>
+    </ol>
+    <h3>Example</h3>
+    <p>For my Poultry Feed Stock Tracking with POS project, I would explain it to an owner like this: &ldquo;Poultry feed shops track stock by hand, which causes mistakes. This app updates the stock automatically with every sale, so you always know what is left.&rdquo;</p>
+    <h3>Where I practiced this</h3>
+    <p>In my mock IT job interview, I explained my projects, skills and career goals out loud. I also document my work, such as my case files and project pages, so other people can follow my reasoning.</p>
+  </div>
+
+  <div data-key="teamwork" data-file="teamwork.md">
+    <p class="ai-meta">Employability &middot; Rowena Clores</p>
+    <h2>Teamwork</h2>
+    <h3>Group project</h3>
+    <p><strong>Poultry Feed Stock Tracking with POS Application.</strong> A team project that automates inventory management and sales transactions, improves the accuracy of stock records, and makes poultry feed businesses more efficient.</p>
+    <h3>My role</h3>
+    <p>[Add your role in the team here]</p>
+    <h3>What the team had to build</h3>
+    <ul class="block-list">
+      <li>A system for several kinds of users: owners, managers, inventory clerks and cashiers</li>
+      <li>Login roles, product search, input validation and sales reports</li>
+      <li>Parts that work together, because every sale changes the stock level</li>
+    </ul>
+    <h3>How I work in a team</h3>
+    <ul class="block-list">
+      <li>Agree early on who does which part</li>
+      <li>Keep files organized with Git and GitHub</li>
+      <li>Check that each person&rsquo;s part connects with the others</li>
+      <li>Be honest about limitations and future improvements</li>
+    </ul>
+    <h3>What I learned</h3>
+    <p>A system is a set of connected parts. A team succeeds when each part fits the others, so clear communication matters as much as technical skill.</p>
+    <a class="ai-link" href="project1.html">View project details <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+
+  <div data-key="time" data-file="time-management.md">
+    <p class="ai-meta">Employability &middot; Rowena Clores</p>
+    <h2>Time management</h2>
+    <p>Meeting a deadline is about planning early and avoiding wasted time. This is how I do it.</p>
+    <h3>How I meet deadlines</h3>
+    <ol class="steps">
+      <li><strong>Break the work into steps.</strong> Each project starts with a need, then I split it into small tasks such as design, build, test and document.</li>
+      <li><strong>Do the core features first.</strong> The main function must work before I add extras.</li>
+      <li><strong>Set smaller target dates</strong> for each step instead of one date at the end.</li>
+      <li><strong>Change one thing at a time</strong> when testing, so errors are easy to find and fix.</li>
+      <li><strong>Save working versions in Git.</strong> If a change breaks something, I can go back quickly instead of losing hours.</li>
+      <li><strong>Leave time at the end</strong> to check the work before submitting.</li>
+    </ol>
+    <h3>Example</h3>
+    <p>I completed three projects: Poultry Feed Stock Tracking with POS, Social Media Engagement Analysis, and an Expense Tracking Application. Each one needed planning, testing and documentation, so I worked in stages to finish them.</p>
+    <h3>What I learned</h3>
+    <p>Measuring and planning before fixing saves more time than rushing. Small steps and regular checks keep a project on schedule.</p>
+  </div>
+
+</div>
+
+<!-- ABOUT ME PREVIEW -->
+<div class="ai-modal" id="aboutModal" role="dialog" aria-modal="true" aria-label="About Me" aria-hidden="true">
+  <div class="ai-window">
+    <div class="ai-bar">
+      <code>about-me.md</code>
+      <button class="doc-close" id="aboutClose" type="button" aria-label="Close About Me"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="ai-body" tabindex="0">
+      <p class="ai-meta">Discover &middot; Rowena Clores</p>
+      <h2>About Me</h2>
+      <div class="about-text">
+        <p>I am a BSIT student who became interested in IT after learning how much planning and problem-solving sits behind the apps people use every day. My interests are web development, data analysis, and troubleshooting, because I enjoy finding the real cause of a problem and making technology simpler to use.</p>
+        <p>My technical strengths include building websites with HTML, CSS, and JavaScript, writing Python, querying databases with SQL, and analyzing data in Excel. I have also built an Android app in Kotlin and used Git and GitHub to keep my projects organized. Beyond coding, I document my work and test my assumptions before trusting results.</p>
+        <p>My goal is to become an IT Project Manager who can lead teams in building useful web solutions. I want to understand the technical work well enough to keep projects realistic, organized, and honest about progress.</p>
+        <p>I value honesty, careful verification, and clear communication. I believe good systems start with a real user need, and that good leaders explain technical ideas in plain language. I also use AI tools responsibly, checking every output before I rely on it.</p>
+        <p>The IT work that interests me most connects people with the technology they need: building web applications for small businesses, designing data-driven solutions, and coordinating teams from idea to delivery.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI LITERACY DOCUMENT PREVIEW -->
+<div class="ai-modal" id="aiModal" role="dialog" aria-modal="true" aria-label="My AI Literacy Evidence document" aria-hidden="true">
+  <div class="ai-window">
+    <div class="ai-bar">
+      <code>ai-usage-log.md</code>
+      <button class="doc-close" id="aiClose" type="button" aria-label="Close document"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="ai-body" tabindex="0">
+      <p class="ai-meta">AI Literacy Evidence &middot; Rowena Clores</p>
+      <h2>AI Usage Log</h2>
+
+      <div class="ai-table-wrap">
+        <table class="ai-table">
+          <thead>
+            <tr><th>Date</th><th>Task</th><th>AI assistance</th><th>My verification</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[October 3 2026]</td>
+              <td>Drafting a cybersecurity case study on SQL injection</td>
+              <td>Produced a first draft of the five answers: vulnerability, how it happens, risks, prevention and security practices.</td>
+              <td>Checked each claim against standard descriptions of SQL injection and parameterized queries, and rewrote it as a general study rather than a personal experience.</td>
+            </tr>
+            <tr>
+              <td>[October 10 2026]</td>
+              <td>Adding the case to my portfolio page</td>
+              <td>Provided HTML for a new file card, a case content block and the file count change.</td>
+              <td>Confirmed the markers matched my file, then checked that the viewer, count and Previous/Next navigation worked.</td>
+            </tr>
+            <tr>
+              <td>[October 17 2026]</td>
+              <td>Choosing the card grid layout</td>
+              <td>Suggested column changes for six and seven cards.</td>
+              <td>Compared the options at desktop and mobile widths and kept the three-column layout for six cards.</td>
+            </tr>
+            <tr>
+              <td>[October 24 2026]</td>
+              <td>Removing a case and reviewing the page</td>
+              <td>Gave the steps to remove a case, and rewrote the full page file.</td>
+              <td>Checked that the removed card and content were gone, the count read 6 files, and no other section had changed.</td>
+            </tr>
+            <tr>
+              <td>[October 31 2026]</td>
+              <td>Preparing this AI Usage Log</td>
+              <td>Drafted the log structure and answers from my notes on the project.</td>
+              <td>Compared each entry with what I actually did and edited the dates and details before publishing.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>What did AI help me accomplish?</h3>
+      <p>AI helped me draft the SQL injection case, write the HTML and CSS needed to add case files to the Problem-Solving folder, compare layout options, and produce a complete updated page. It sped up the repetitive parts, so I could spend more time checking the content.</p>
+
+      <h3>What did I personally verify?</h3>
+      <p>I checked the definitions and prevention advice against standard references, and rewrote the case in my own words as a general study. I tested the page after each change: the new cards opened the viewer, the file count was correct, and the other sections were unchanged. I confirmed the layout at desktop and mobile widths.</p>
+
+      <h3>What did I learn from using AI?</h3>
+      <p>AI can produce a well-organized draft quickly, but a draft is only a starting point. I can only judge an answer properly when I understand the topic, so AI made my own knowledge more important, not less. Working in small steps also made errors easier to find. I learned to keep the case honest by writing it as a study, not as an experience I did not have.</p>
+
+      <h3>What limitations and errors did I discover?</h3>
+      <p>AI cannot see my screen, so it could not confirm that its layout or code fit my actual page. Its instructions depended on text matching my file exactly, and some answers repeated work I had already done. In one reply, the assistant assumed the page still had five cases, so I had to check which version the page actually contained. Its content was general, so I had to reword it and confirm each claim myself.</p>
+
+      <p class="ai-note"><strong>Purpose:</strong> this log shows how I used AI responsibly, as a tool I checked and directed, not as a replacement for my own understanding.</p>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+/* Click a certificate to see it in a popup (images and PDFs) */
+(function () {
+  const modal = document.getElementById("certModal");
+  if (!modal) return;
+  const img = document.getElementById("certImg");
+  const frame = document.getElementById("certFrame");
+  const newTab = document.getElementById("certNewTab");
+  const closeBtn = document.getElementById("certClose");
+  let lastFocus = null;
+
+  function openModal(src, alt, trigger) {
+    const isPdf = /\.pdf($|[?#])/i.test(src);
+    if (isPdf) {
+      img.hidden = true; img.removeAttribute("src");
+      frame.hidden = false; frame.src = src + "#toolbar=0&navpanes=0&view=FitH";
+      newTab.hidden = false; newTab.href = src;
+    } else {
+      frame.hidden = true; frame.removeAttribute("src"); newTab.hidden = true;
+      img.hidden = false; img.src = src; img.alt = alt;
+    }
+    lastFocus = trigger;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    frame.removeAttribute("src");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  document.querySelectorAll(".cert-link").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault(); // without JS the link still opens the file directly
+      openModal(a.getAttribute("href"), a.dataset.alt || "Certificate", a);
+    });
+  });
+
+  closeBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+  });
+})();
+</script>
+<script>
+/* Click a file in the folder to read the case in a popup */
+(function () {
+  const modal = document.getElementById("docModal");
+  const side = document.getElementById("docSide");
+  const body = document.getElementById("docBody");
+  const nameEl = document.getElementById("docName");
+  const closeBtn = document.getElementById("docClose");
+  const prevBtn = document.getElementById("docPrev");
+  const nextBtn = document.getElementById("docNext");
+  const docs = Array.from(document.querySelectorAll("#caseData .case-doc"));
+  let current = 0, lastFocus = null;
+
+  /* build the file list on the left from the case data */
+  const heading = document.createElement("p");
+  heading.className = "doc-side-title";
+  heading.textContent = "Case files";
+  side.appendChild(heading);
+  const tabs = docs.map((d, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "doc-tab";
+    b.dataset.short = d.dataset.short;
+    b.innerHTML = '<span class="clay-chip"><i class="' + d.dataset.icon + '"></i></span><span><strong>' + d.dataset.title + '</strong><small>File 0' + (i + 1) + ' · MD</small></span>';
+    b.addEventListener("click", () => show(i));
+    side.appendChild(b);
+    return b;
+  });
+
+  function show(i) {
+    current = i;
+    body.innerHTML = docs[i].innerHTML;
+    body.scrollTop = 0;
+    nameEl.textContent = docs[i].dataset.file;
+    tabs.forEach((t, k) => { t.classList.toggle("active", k === i); if (k === i) t.setAttribute("aria-current", "true"); else t.removeAttribute("aria-current"); });
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === docs.length - 1;
+  }
+
+  function openModal(i, trigger) {
+    show(i);
+    lastFocus = trigger || null;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  document.querySelectorAll(".doc-card").forEach((c) => {
+    c.addEventListener("click", () => openModal(Number(c.dataset.doc), c));
+  });
+  closeBtn.addEventListener("click", closeModal);
+  prevBtn.addEventListener("click", () => { if (current > 0) show(current - 1); });
+  nextBtn.addEventListener("click", () => { if (current < docs.length - 1) show(current + 1); });
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener("keydown", (e) => {
+    if (!modal.classList.contains("open")) return;
+    if (e.key === "Escape") closeModal();
+    else if (e.key === "ArrowRight" && current < docs.length - 1) show(current + 1);
+    else if (e.key === "ArrowLeft" && current > 0) show(current - 1);
+  });
+})();
+</script>
+<script>
+/* Click the AI Literacy card to preview the usage log */
+(function () {
+  const modal = document.getElementById("aiModal");
+  const openBtn = document.getElementById("aiOpen");
+  const closeBtn = document.getElementById("aiClose");
+  if (!modal || !openBtn) return;
+  let lastFocus = null;
+
+  function show() {
+    lastFocus = openBtn;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    closeBtn.focus();
+  }
+  function hide() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  openBtn.addEventListener("click", show);
+  closeBtn.addEventListener("click", hide);
+  modal.addEventListener("click", (e) => { if (e.target === modal) hide(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) hide();
+  });
+})();
+</script>
+<script>
+/* Click the Mock interview card to watch the video in a popup */
+(function () {
+  const modal = document.getElementById("videoModal");
+  const card = document.getElementById("videoOpen");
+  const player = document.getElementById("videoPlayer");
+  const closeBtn = document.getElementById("videoClose");
+  if (!modal || !card || !player) return;
+
+  function show() {
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    player.preload = "auto";
+    closeBtn.focus();
+    const p = player.play();
+    if (p && p.catch) p.catch(() => {}); // if autoplay is blocked, the viewer just presses play
+  }
+  function hide() {
+    player.pause();
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    card.focus();
+  }
+
+  card.addEventListener("click", show);
+  card.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(); }
+  });
+  closeBtn.addEventListener("click", hide);
+  modal.addEventListener("click", (e) => { if (e.target === modal) hide(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) hide();
+  });
+})();
+</script>
+<script>
+/* Click Communication, Teamwork or Time management to preview the answer */
+(function () {
+  const modal = document.getElementById("answerModal");
+  const body = document.getElementById("answerBody");
+  const nameEl = document.getElementById("answerName");
+  const closeBtn = document.getElementById("answerClose");
+  const cards = document.querySelectorAll(".answer-card");
+  if (!modal || !cards.length) return;
+  let lastFocus = null;
+
+  function show(card) {
+    const data = document.querySelector('#answerData [data-key="' + card.dataset.answer + '"]');
+    if (!data) return;
+    body.innerHTML = data.innerHTML;
+    body.scrollTop = 0;
+    nameEl.textContent = data.dataset.file;
+    lastFocus = card;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    closeBtn.focus();
+  }
+  function hide() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  cards.forEach((c) => {
+    c.addEventListener("click", () => show(c));
+    c.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(c); }
+    });
+  });
+  closeBtn.addEventListener("click", hide);
+  modal.addEventListener("click", (e) => { if (e.target === modal) hide(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) hide();
+  });
+})();
+</script>
+<script>
+/* Click the About Me card to read it in a preview */
+(function () {
+  const modal = document.getElementById("aboutModal");
+  const openBtn = document.getElementById("aboutOpen");
+  const closeBtn = document.getElementById("aboutClose");
+  if (!modal || !openBtn) return;
+  let lastFocus = null;
+
+  function show() {
+    lastFocus = openBtn;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    closeBtn.focus();
+  }
+  function hide() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  openBtn.addEventListener("click", show);
+  closeBtn.addEventListener("click", hide);
+  modal.addEventListener("click", (e) => { if (e.target === modal) hide(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) hide();
+  });
+})();
+</script>
+</body>
+</html>
