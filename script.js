@@ -23,7 +23,7 @@ setTimeout(finishLoading, 4000); // safety: never get stuck on the loader
 
 /* ---------- 2. TYPING EFFECT ---------- */
 /* Change these lines to your own words */
-const phrases = ["Aspiring Junior Web Developer and Data Analyst", "4th Year BSIT Student"];
+const phrases = ["Aspiring Junior Web Developer and Data Analyst", "4th Year BSIT Student","Always willing to learn"];
 const typed = document.getElementById("typed");
 let typingStarted = false;
 
